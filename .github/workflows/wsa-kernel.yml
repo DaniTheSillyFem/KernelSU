@@ -104,8 +104,14 @@ jobs:
           declare -A ARCH_MAP_FILE=(["x86_64"]="x86" ["arm64"]="arm64")
           echo "file_path=WSA-Linux-Kernel/arch/${ARCH_MAP_FILE[${{ inputs.arch }}]}/boot/${FILE_NAME[${{ inputs.arch }}]}" >> $GITHUB_ENV
 
-      - name: Upload kernel-${{ inputs.arch }}-${{ inputs.version }}
+      - name: Upload kernel-${{ inputs.arch }}-${{ inputs.version }} to Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: kernel-WSA-${{ inputs.arch }}-${{ inputs.version }}
           path: "${{ env.file_path }}"
+
+      - name: Upload kernel-${{ inputs.arch }}-${{ inputs.version }} to Releases
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v3.2.5
+          files: "${{ env.file_path }}"
